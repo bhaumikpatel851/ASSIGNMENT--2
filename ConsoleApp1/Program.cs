@@ -96,4 +96,59 @@ class Board
         }
         Console.WriteLine();
     }
+
+    public bool IsValidMove(Player player, char direction)
+    {
+        // Check if the move is within bounds and does not go through obstacles
+        int newX = player.Position.X;
+        int newY = player.Position.Y;
+
+        switch (direction)
+        {
+            case 'u':
+                newY--;
+                break;
+            case 'd':
+                newY++;
+                break;
+            case 'l':
+                newX--;
+                break;
+            case 'r':
+                newX++;
+                break;
+        }
+
+        return newX >= 0 && newX < 6 && newY >= 0 && newY < 6 && Grid[newY, newX].Occupant != "O";
+    }
+    public bool CollectGem(Player player)
+    {
+        // Check if the player's new position contains a gem
+        if (Grid[player.Position.Y, player.Position.X].Occupant == "G")
+        {
+            Grid[player.Position.Y, player.Position.X].Occupant = "-";
+            player.GemCount++;
+            return true;
+        }
+        return false;
+    }
+}
+
+class Game
+{
+    public Board Board { get; set; }
+    public Player Player1 { get; set; }
+    public Player Player2 { get; set; }
+    public Player CurrentTurn { get; set; }
+    public int TotalTurns { get; set; }
+
+    public Game()
+    {
+        Board = new Board();
+        Player1 = new Player("P1", new Position(0, 0));
+        Player2 = new Player("P2", new Position(5, 5));
+        CurrentTurn = Player1;
+        TotalTurns = 0;
+    }
+
 }
