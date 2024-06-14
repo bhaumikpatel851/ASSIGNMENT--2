@@ -151,4 +151,69 @@ class Game
         TotalTurns = 0;
     }
 
+    public void Start()
+    {
+        while (!IsGameOver())
+        {
+            Board.Display();
+            Console.WriteLine($"{CurrentTurn.Name}'s turn. Enter move (u/d/l/r): ");
+            char move = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+
+            if (Board.IsValidMove(CurrentTurn, move))
+            {
+                CurrentTurn.Move(move);
+                if (Board.CollectGem(CurrentTurn))
+                {
+                    Console.WriteLine($"{CurrentTurn.Name} collected a gem!");
+                }
+
+                TotalTurns++;
+                SwitchTurn();
+            }
+            else
+            {
+                Console.WriteLine("Invalid move. Try again.");
+            }
+        }
+
+        AnnounceWinner();
+    }
+
+    public void SwitchTurn()
+    {
+        CurrentTurn = (CurrentTurn == Player1) ? Player2 : Player1;
+    }
+
+    public bool IsGameOver()
+    {
+        return TotalTurns >= 30;
+    }
+
+    public void AnnounceWinner()
+    {
+        Board.Display();
+        if (Player1.GemCount > Player2.GemCount)
+        {
+            Console.WriteLine($"Player {Player1.Name} wins!");
+        }
+        else if (Player1.GemCount < Player2.GemCount)
+        {
+            Console.WriteLine($"Player {Player2.Name} wins!");
+        }
+        else
+        {
+            Console.WriteLine("It's a tie!");
+        }
+    }
 }
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Game gemHuntersGame = new Game();
+        gemHuntersGame.Start();
+    }
+}
+
